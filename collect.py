@@ -1,9 +1,11 @@
 import pandas as pd 
 import os
 import logging
-from keys import key
+from keys import key,DIR_CSV,DIR_LOG
 
-logging.basicConfig(level=logging.INFO, filename="programa.log", format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(level=logging.INFO, filename=DIR_LOG, format="%(asctime)s - %(levelname)s - %(message)s")
+
+
 SPREADSHEETS = []
 def import_data():
     url = f'https://docs.google.com/spreadsheets/d/{key}/pubhtml'
@@ -33,7 +35,7 @@ def join_data():
 
     return df
 
-def etl2_data():
+def etl_data():
 
     df = join_data()
     # FRIST COLUMN DROP
@@ -45,13 +47,14 @@ def etl2_data():
     # PROMOVE NAME COLUMN
     df.columns = df.iloc[0]
 
+    # REMOVE LINE DESCRITION
     df = df[df[df.columns[0]] != "Data"].reset_index(drop=True)
 
     # REMOVE COLUMN NULL
-    df = df.dropna(axis=1, how='all')
+    df = df.dropna(axis=1, how='all').reset_index(drop=True)
 
     # REMOVE LINE NULL
-    df = df.dropna(how='all')
+    df = df.dropna(how='all').reset_index(drop=True)
 
 
     # REPLACE ; > :
@@ -60,23 +63,35 @@ def etl2_data():
    
     return df   
 def export_data():
-    df = etl2_data()
+    df = etl_data()
     try:
-        # Check if the file exists
-        file_exists = os.path.isfile('controle_bonus.csv')
+
+        remove_csv = os.path.dirname(DIR_CSV)
+        remove_log = os.path.dirname(DIR_LOG)
+
+        if not os.path.exists(remove_csv):
+            os.makedirs(remove_csv)
+
+        if not os.path.exists(remove_log):
+            os.makedirs(remove_log)
         
-        # Save the data to CSV in append mode
+        # Check if the file exists
+        file_exists = os.path.isfile(DIR_CSV)
+
+       # Save the data to CSV in append mode
         df.to_csv(
-            'controle_bonus.csv', 
-            index=False, 
-            sep=';', 
-            decimal='.', 
-            mode='a', 
-            header=not file_exists  # Write header only if the file does not exist
-        )
+                DIR_CSV, 
+                index=False, 
+                sep=';', 
+                decimal='.', 
+                mode='a', 
+                header=not file_exists  # Write header only if the file does not exist
+            )
+
+
         logging.info(f'sucessfull')   
     except Exception as e:
         logging.error(f'Erro generate csv: {e}')
-        print(f'Erro generate csv: {e}')
+        
 
 

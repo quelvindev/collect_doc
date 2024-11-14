@@ -1,20 +1,26 @@
-📊 Google Sheets Data ETL and CSV Export
+  <h1> 📊 Exporting data from Google Sheets to CSV </h1>
+
 This Python project extracts data from a Google Sheets file, performs a series of ETL (Extract, Transform, Load) processes to clean and format the data, and exports it as a CSV file. It leverages pandas for data manipulation, and allows seamless data import from publicly accessible Google Sheets.
 
-🚀 Project Overview
-Import Data: Retrieves data from a publicly accessible Google Sheets URL.
-Transform Data: Cleans and formats the data by removing empty rows and columns, promoting column headers, and formatting specific values.
-Export Data: Saves the transformed data to a CSV file for further analysis.
+<h2>🚀 Project Overview</h2>
+
+- **Import Data:** Retrieves data from a publicly accessible Google Sheets URL.
+- **Transform Data:** Cleans and formats the data by removing empty rows and columns, promoting column headers, and formatting specific values.
+- **Export Data:** Saves the transformed data to a CSV file for further analysis.
+
 
 📂 Project Structure
 
 ```bash
 .
-├── main.py          # Main script to perform ETL and export
+├── main.py             # Application startup script
+├──  collect.py         # File that loads, cleans and exports data
+├── keys.py             # Ignored in .gitignore
 └── controle_bonus.csv  # Output CSV file after transformation
 ```
 
-📋 Process Flow
+<h2>📋 Process Flow</h2>
+
 1. Import Data
 The import_data() function uses pandas.read_html() to import data directly from the Google Sheets link:
 
@@ -33,9 +39,10 @@ Value Formatting: Replaces semicolons (;) with colons (:) in specific columns.
 4. Export Data
 The cleaned data is saved to a CSV file, controle_bonus.csv, using the export_data() function.
 
-🛠️ Code Example
+<h2>🛠️ Code Example</h2>
+
 ```bash
-# Main ETL process
+# DATA CLEANING
 def etl2_data():
     df = join_data()
     if df.shape[1] > 0:
@@ -51,7 +58,7 @@ def etl2_data():
 
 ```bash
 git clone https://github.com/your-username/google-sheets-etl.git
-cd google-sheets-etl
+cd collect_doc
 ```
 2. Install Required Libraries:
 ```bash
@@ -68,4 +75,24 @@ tzdata==2024.2
 ```bash
 python main.py
 ```
+
+4. Check the Output: The output CSV file controle_bonus.csv will be in the project directory
+
+🔍 Example Output
+Here is an example of the transformed data that will be exported to controle_bonus.csv:
+
+
+|    Date     | Hr. Chegada|    Nota       |
+| :---:       | :---:      | :---:         |
+|2024-01-01   |	  08:00    |   297332      |
+|2024-01-02   |	  10:00    |   297346      |
+|2024-01-03   |	  08:45    |   989856      |
+
+
+📝 Notes
+- Ensure that the Google Sheets link is public and accessible.
+- Modify the Google Sheets URL in the import_data() function if needed.
+
+
+Happy Data Processing! 🥂
 
