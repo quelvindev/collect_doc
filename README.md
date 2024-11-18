@@ -14,7 +14,7 @@ This Python project extracts data from a Google Sheets file, performs a series o
 ```bash
 .
 ├── main.py             # Application startup script
-├──  collect.py         # File that loads, cleans and exports data
+├── collect.py          # File that loads, cleans and exports data
 ├── keys.py             # Ignored in .gitignore
 └── controle_bonus.csv  # Output CSV file after transformation
 ```
@@ -43,15 +43,42 @@ The cleaned data is saved to a CSV file, controle_bonus.csv, using the export_da
 
 ```bash
 # DATA CLEANING
-def etl2_data():
-    df = join_data()
-    if df.shape[1] > 0:
-        df = df.drop(df.columns[0], axis=1)
-    df.columns = df.iloc[0]
+def transform_data():
+    column_names = []
+
+    df = concat_data()
+    # FRIST COLUMN DROP
+    df = df.drop(df.columns[0], axis=1)
+
+    # REMOVE COLUMN NULL
+    df = df.dropna(axis=1, how='all').reset_index(drop=True)
+
+    # REMOVE LINE NULL
+    df = df.dropna(how='all').reset_index(drop=True)
+    
+    df = df[df[df.columns[0]] != "CONTROLE DE RECEBIMENTO DIARIO (BONUS)"].reset_index(drop=True)
+
+    df = df[df[df.columns[0]] != "f"].reset_index(drop=True)
+
+    
+    column_names =   df.iloc[0].apply(lambda x: str(x) if pd.notnull(x) else "").tolist()
+
+   
+    #REMOVE LINES DESCRITION
     df = df[df[df.columns[0]] != "Data"].reset_index(drop=True)
-    df = df.dropna(axis=1, how='all').dropna(how='all')
+
+    # REPLACE DATE ; > /
+    df[df.columns[0]] = df[df.columns[0]].str.replace(";", "/")
+
+    # REPLACE HOUR ; > :
     df[df.columns[1]] = df[df.columns[1]].str.replace(";", ":")
-    return df
+
+    
+    # PROMOVE NAME COLUMN
+    df.columns = [string_to_snake_case(name) for name in column_names]
+
+   
+    return df   
 ```
 📦 Installation and Usage
 1. Clone the Repository:
@@ -62,11 +89,17 @@ cd collect_doc
 ```
 2. Install Required Libraries:
 ```bash
+altgraph==0.17.4
 lxml==5.3.0
 numpy==2.1.3
+packaging==24.2
 pandas==2.2.3
+pefile==2023.2.7
+pyinstaller==6.11.1
+pyinstaller-hooks-contrib==2024.10
 python-dateutil==2.9.0.post0
 pytz==2024.2
+pywin32-ctypes==0.2.3
 six==1.16.0
 tzdata==2024.2
 ```
