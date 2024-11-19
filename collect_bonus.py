@@ -25,7 +25,7 @@ class CollectBonus:
         except Exception as e:
             
             self.logger.info(f'Erro load spreadsheets bonus: {e}')
-            print("Erro load spreadsheets bonus: ", e)
+            print(f'Erro load spreadsheets bonus: {e}')
             data = []
 
         return data
@@ -109,9 +109,9 @@ class CollectBonus:
                 )
 
 
-            self.logger.info(f'sucessfull')   
+            self.logger.info(f'sucessfull bonus')   
         except Exception as e:
-            self.logger.info(f'Erro generate csv: {e}')
+            self.logger.info(f'Erro generate csv bonus: {e}')
             
 
 
