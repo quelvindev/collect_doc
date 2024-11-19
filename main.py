@@ -1,5 +1,9 @@
-from collect import export_data
-
+# main.py
+from collect_bonus import CollectBonus
 
 if __name__ == '__main__':
-    export_data()
+    
+    collector = CollectBonus()
+    
+    
+    collector.export_data()
