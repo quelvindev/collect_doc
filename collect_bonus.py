@@ -12,8 +12,8 @@ class CollectBonus:
         self.logger = LoggerConfig().get_logger()
         self.spreadsheets = []
         self.key_bonus = Keys.get_key_bonus()
-        self.dir_csv = Keys.get_dir_csv()
-        self.dir_log = Keys.get_dir_log()
+        self.dir_csv = Keys.get_arq_csv_bonus()
+        self.dir_log = Keys.get_arq_log()
 
     
     def import_data(self):

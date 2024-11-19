@@ -6,7 +6,7 @@ from keys import Keys
 class LoggerConfig:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.dir_log = Keys.get_dir_log()
+        self.dir_log = Keys.get_arq_log()
         if not self.logger.hasHandlers():
             handler = logging.FileHandler(self.dir_log)
             handler.setLevel(logging.INFO)
