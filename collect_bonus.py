@@ -57,10 +57,7 @@ class CollectBonus:
 
         df = self.concat_data()
         # FRIST COLUMN DROP
-        df = df.drop(df.columns[0], axis=1)
-
-
-        df = df.drop(df.columns[[8,14,15]], axis=1)
+        df = df.drop(df.columns[[0,8,14,15]], axis=1)
 
         # REMOVE COLUMN NULL
         df = df.dropna(axis=1, how='all').reset_index(drop=True)
