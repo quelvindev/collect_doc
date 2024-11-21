@@ -55,6 +55,8 @@ class CollectAgenda:
 
         column_names =   df.iloc[0].apply(lambda x: str(x) if pd.notnull(x) else "").tolist()
 
+        # REPLACE QTD ; > /
+        df[df.columns[5]] = df[df.columns[5]].str.replace("-", "")
     
         # #REMOVE LINES DESCRITION
         df = df[df[df.columns[0]].str.upper() != "DATA"].reset_index(drop=True)
@@ -81,7 +83,7 @@ class CollectAgenda:
                     index=False, 
                     sep=';', 
                     decimal='.', 
-                    mode='a', 
+                   
                     header=not file_exists  # Write header only if the file does not exist
                 )
 

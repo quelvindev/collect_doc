@@ -122,6 +122,25 @@ Here is an example of the transformed data that will be exported to controle_bon
 |2024-01-03   |	  08:45    |   989856      |
 
 
+### Bonus !
+
+Follow the steps below to generate an executable
+1. Install PyInstaller: Open the terminal and install PyInstaller with the command:
+```bash
+pip install pyinstaller
+```
+2. Navigate to the Project Directory: Open the terminal in the folder where your main script (main.py, for example) is located.
+
+3. Run PyInstaller: Use the command below to generate the executable:
+```bash
+pyinstaller --onefile main.py
+```
+
+If your project has a graphical interface and you want to hide the console, use --noconsole:
+```bash
+pyinstaller --onefile --noconsole main.py
+```
+
 📝 Notes
 - Ensure that the Google Sheets link is public and accessible.
 - Modify the Google Sheets URL in the import_data() function if needed.
