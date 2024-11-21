@@ -59,11 +59,18 @@ class CollectBonus:
         # FRIST COLUMN DROP
         df = df.drop(df.columns[0], axis=1)
 
+
+        df = df.drop(df.columns[[8,14,15]], axis=1)
+
         # REMOVE COLUMN NULL
         df = df.dropna(axis=1, how='all').reset_index(drop=True)
 
         # REMOVE LINE NULL
-        df = df.dropna(how='all').reset_index(drop=True)
+        #df = df.dropna(how='all').reset_index(drop=True)
+
+        
+        
+
         
         #df = df[df[df.columns[0]] != "CONTROLE DE RECEBIMENTO DIARIO (BONUS)"].reset_index(drop=True)
         df = df[~df.apply(lambda row: row.map(lambda x: isinstance(x, str) and x.startswith("CONTROLE"))).any(axis=1)].reset_index(drop=True)
