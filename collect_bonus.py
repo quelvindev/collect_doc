@@ -11,6 +11,7 @@ class CollectBonus:
     def __init__(self):
         self.logger = LoggerConfig().get_logger()
         self.spreadsheets = []
+        self.spreadsheets2 = []
         self.key_bonus = Keys.get_key_bonus()
         self.dir_csv = Keys.get_arq_csv_bonus()
         self.dir_log = Keys.get_arq_log()
@@ -32,17 +33,31 @@ class CollectBonus:
 
     def collect_data(self):
         data = self.import_data()
-
+        modific = len(data) - 7
         for _, table in enumerate(data):
 
-            self.spreadsheets.append(table)
-                
-        return self.spreadsheets 
+            if _ < modific:
+                  
+                tab = table.drop(table.columns[9], axis=1)
+                tab = tab.rename(columns={"Unnamed: 10": "Unnamed: 9",
+                                          "Unnamed: 11": "Unnamed: 10",
+                                          "Unnamed: 12": "Unnamed: 11",
+                                          "Unnamed: 13": "Unnamed: 12",
+                                          "Unnamed: 14": "Unnamed: 13",
+                                          "Unnamed: 15": "Unnamed: 14",
+                                          })
+                self.spreadsheets.append(tab)
+            else:
+               
+                self.spreadsheets.append(table)
+        
+        
+        return  self.spreadsheets
 
     def concat_data(self):
 
         spreadsheets = self.collect_data()
-        df = pd.concat(spreadsheets,ignore_index=False)
+        df = pd.concat(spreadsheets,ignore_index=True,axis=0)
 
         return df
 
@@ -57,13 +72,13 @@ class CollectBonus:
 
         df = self.concat_data()
         # FRIST COLUMN DROP
-        df = df.drop(df.columns[[0,8,14,15]], axis=1)
+        df = df.drop(df.columns[0], axis=1)
 
         # REMOVE COLUMN NULL
         df = df.dropna(axis=1, how='all').reset_index(drop=True)
 
         # REMOVE LINE NULL
-        #df = df.dropna(how='all').reset_index(drop=True)
+        df = df.dropna(how='all').reset_index(drop=True)
 
         
         
@@ -80,17 +95,17 @@ class CollectBonus:
         column_names =   df.iloc[0].apply(lambda x: str(x) if pd.notnull(x) else "").tolist()
 
     
-        #REMOVE LINES DESCRITION
+        # #REMOVE LINES DESCRITION
         df = df[df[df.columns[0]].str.upper() != "DATA"].reset_index(drop=True)
 
-        # REPLACE DATE ; > /
+        # # REPLACE DATE ; > /
         df[df.columns[0]] = df[df.columns[0]].str.replace(";", "/")
 
-        # REPLACE HOUR ; > :
+        # # REPLACE HOUR ; > :
         df[df.columns[1]] = df[df.columns[1]].str.replace(";", ":")
 
         
-        # PROMOVE NAME COLUMN
+        # # PROMOVE NAME COLUMN
         df.columns = [self.string_to_snake_case(name) for name in column_names]
 
     
@@ -113,7 +128,8 @@ class CollectBonus:
                 )
 
 
-            self.logger.info(f'sucessfull bonus')   
+            self.logger.info(f'sucessfull bonus') 
+            print(f'sucessfull bonus {self.dir_csv}') 
         except Exception as e:
             self.logger.info(f'Erro generate csv bonus: {e}')
             
