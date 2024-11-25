@@ -102,7 +102,28 @@ class CollectBonus:
         df[df.columns[0]] = df[df.columns[0]].str.replace(";", "/")
 
         # # REPLACE HOUR ; > :
-        df[df.columns[1]] = df[df.columns[1]].str.replace(";", ":")
+        #df[df.columns[1]] = df[df.columns[1]].str.replace(";", ":")
+        df[df.columns[1]] = (df[df.columns[1]]
+                                    .astype(str)
+                                    .str.replace(";", ":")
+                                    .str.replace("*", "00:00")
+                                    .str.replace("-","00:00")
+                                    .str.replace("nan","00:00"))
+
+        df[df.columns[2]] = (df[df.columns[2]] 
+                                    .astype(str)
+                                    .str.replace("nan", "0")
+                                    .str.replace("RTYUIPP´[", "0")
+                                    .str.replace("FERNANDO", "0"))
+
+        df[df.columns[4]] = (df[df.columns[4]] 
+                                    .astype(str)
+                                    .str.replace("nan", "0")
+                                    .str.replace("*", "0")
+                                    .str.replace("-", "0"))
+
+                                                        
+
 
         
         # # PROMOVE NAME COLUMN

@@ -75,16 +75,16 @@ class CollectAgenda:
         try:
             
             # Check if the file exists
-            file_exists = os.path.isfile(name)
+            
 
         # Save the data to CSV in append mode
             df.to_csv(
                     name, 
                     index=False, 
                     sep=';', 
-                    decimal='.', 
+                    decimal='.'
                    
-                    header=not file_exists  # Write header only if the file does not exist
+                    
                 )
 
 
