@@ -68,13 +68,18 @@ class CollectPreEntrada:
         column_names =   df.iloc[0].apply(lambda x: str(x) if pd.notnull(x) else "").tolist()
 
     
-        # #REMOVE LINES DESCRITION
+        #REMOVE LINES DESCRITION
         df = df[df[df.columns[0]].str.upper() != "MÊS"].reset_index(drop=True)
         df = df[df[df.columns[0]].str.strip().notna() & (df[df.columns[0]].str.strip() != "")].reset_index(drop=True)
 
 
-        # # PROMOVE NAME COLUMN
+        # PROMOVE NAME COLUMN
         df.columns = [self.string_to_snake_case(name) for name in column_names]
+
+        
+        df[df.columns[1]] = df[df.columns[1]].apply(
+            lambda x: ''.join(char if char.isdigit() else '0' for char in str(x))
+            )
 
     
         self.export_data(df,arq)
@@ -105,6 +110,10 @@ class CollectPreEntrada:
         # # PROMOVE NAME COLUMN
         df.columns = [self.string_to_snake_case(name) for name in column_names]
 
+
+        df[df.columns[1]] = df[df.columns[1]].apply(
+            lambda x: ''.join(char if char.isdigit() else '0' for char in str(x))
+            )
     
         self.export_data(df,arq)
 
