@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import re
 from logger_config import LoggerConfig
+from datetime import datetime, time
 from keys import Keys
 
 
@@ -67,9 +68,20 @@ class CollectBonus:
         string = re.sub(r" ","_",string)
         string = re.sub(r"([a-z])([A-Z])",r"\1_\2",string)
         return string.lower()
-
+    
+    def validate_time_format(self,value):
+            try:
+            
+                datetime.strptime(value, "%H:%M:%S")
+                return value
+            except (ValueError, TypeError):
+            
+                return '00:00'
+   
+        
     def transform_data(self):
 
+        
         df = self.concat_data()
         # FRIST COLUMN DROP
         df = df.drop(df.columns[0], axis=1)
@@ -103,24 +115,36 @@ class CollectBonus:
 
         # # REPLACE HOUR ; > :
         #df[df.columns[1]] = df[df.columns[1]].str.replace(";", ":")
-        df[df.columns[1]] = (df[df.columns[1]]
-                                    .astype(str)
-                                    .str.replace(";", ":")
-                                    .str.replace("*", "00:00")
-                                    .str.replace("-","00:00")
-                                    .str.replace("nan","00:00"))
+        # df[df.columns[1]] = (df[df.columns[1]]
+        #                             .astype(str)
+        #                             .str.replace(";", ":")
+        #                             .str.replace("*", "00:00")
+        #                             .str.replace("-","00:00")
+        #                             .str.replace("nan","00:00"))
+        
+        df[df.columns[1]] = df[df.columns[1]].apply(self.validate_time_format) 
 
-        df[df.columns[2]] = (df[df.columns[2]] 
-                                    .astype(str)
-                                    .str.replace("nan", "0")
-                                    .str.replace("RTYUIPP´[", "0")
-                                    .str.replace("FERNANDO", "0"))
 
-        df[df.columns[4]] = (df[df.columns[4]] 
-                                    .astype(str)
-                                    .str.replace("nan", "0")
-                                    .str.replace("*", "0")
-                                    .str.replace("-", "0"))
+        # df[df.columns[2]] = (df[df.columns[2]] 
+        #                             .astype(str)
+        #                             .str.replace("nan", "0")
+        #                             .str.replace("RTYUIPP´[", "0")
+        #                             .str.replace("FERNANDO", "0"))
+
+        df[df.columns[2]] = df[df.columns[2]].apply(
+            lambda x: ''.join(char if char.isdigit() else '0' for char in str(x))
+            )
+
+
+        # df[df.columns[4]] = (df[df.columns[4]] 
+        #                             .astype(str)
+        #                             .str.replace("nan", "0")
+        #                             .str.replace("*", "0")
+        #                             .str.replace("-", "0"))
+
+        df[df.columns[4]] = df[df.columns[4]].apply(
+            lambda x: ''.join(char if char.isdigit() else '0' for char in str(x))
+            )
 
                                                         
 
